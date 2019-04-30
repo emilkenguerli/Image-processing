@@ -32,6 +32,32 @@ namespace KNGEMI002 {
       Image operator!(); // invert images
 
 
-
+      class iterator {
+        private:
+          unsigned char *ptr;
+          friend class Image; // to get access to Image class methods
+          iterator(u_char *p) : ptr(p) {} // construct only via Image class (begin/end)
+          ~iterator() { ptr = nullptr; }
+          int i;
+        public:  
+        //copy construct is public
+        iterator(const iterator & rhs) : ptr(rhs.ptr) {};
+   
+     // define overloaded ops: *, ++, --, =
+        iterator& operator=(const iterator & rhs);
+        iterator& operator=(iterator && rhs);
+     // other methods for iterator
+        unsigned char &  operator*();
+        iterator& operator++();
+        iterator operator++(const int);
+        iterator& operator--();
+        bool operator!=(const iterator& rhs);
+        const iterator operator+(const iterator& rhs) const;
+      };
+      // define begin()/end() to get iterator to start and
+      // "one-past" end.
+      iterator begin(void) const;
+      iterator end(void) const;
+  };
 }
 #endif
