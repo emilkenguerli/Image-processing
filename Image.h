@@ -4,6 +4,7 @@
 
 #include <iterator>
 #include <memory>
+#include <stdint.h>
 
 using namespace std;
 
@@ -51,7 +52,7 @@ namespace KNGEMI002 {
         private:
           unsigned char *ptr;
           friend class Image; // to get access to Image class methods
-          iterator(u_char *p) : ptr(p) {} // construct only via Image class (begin/end)
+          iterator(unsigned char *p) : ptr(p) {} // construct only via Image class (begin/end)
           ~iterator() { ptr = nullptr; }
           int i;
         public:  
