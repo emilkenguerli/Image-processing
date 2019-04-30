@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
   string InputImageName2;
   string OutputImageName;
 
-  if (arg == "-a") {
+  if (arg == "-a") { // add
     if (argc != 5) {
       show_usage(argv[0]);
       return 1;
@@ -44,19 +44,19 @@ int main(int argc, char* argv[])
     InputImageName2 = argv[3];
     OutputImageName = argv[4];
     KNGEMI002::Image im1(InputImageName1);
-    if (!im1.load(InputImageName1)) {
+    if (!im1.load()) {
       cerr << "Couldn't load " << InputImageName1 << endl;
       return 0;
     }
     KNGEMI002::Image im2(InputImageName2);
-    if (!im2.load(InputImageName2)) {
+    if (!im2.load()) {
       cerr << "Couldn't load " << InputImageName2 << endl;
       return 0;
     }
     KNGEMI002::Image sum = im1 + im2;
     sum.save(OutputImageName);
   }
-  else if (arg == "-s") {
+  else if (arg == "-s") { // substract
     if (argc != 5) {
       show_usage(argv[0]);
       return 1;
@@ -65,19 +65,19 @@ int main(int argc, char* argv[])
     InputImageName2 = argv[3];
     OutputImageName = argv[4];
     KNGEMI002::Image im1(InputImageName1);
-    if (!im1.load(InputImageName1)) {
+    if (!im1.load()) {
       cerr << "Couldn't load " << InputImageName1 << endl;
       return 0;
     }
     KNGEMI002::Image im2(InputImageName2);
-    if (!im2.load(InputImageName2)) {
+    if (!im2.load()) {
       cerr << "Couldn't load " << InputImageName2 << endl;
       return 0;
     }
     KNGEMI002::Image diff = im1 - im2;
     diff.save(OutputImageName);
   }
-  else if (arg == "-i") {
+  else if (arg == "-i") {  // invert
     if (argc != 4) {
       show_usage(argv[0]);
       return 1;
@@ -85,14 +85,14 @@ int main(int argc, char* argv[])
     InputImageName1 = argv[2];
     OutputImageName = argv[3];
     KNGEMI002::Image im(InputImageName1);
-    if (!im.load(InputImageName1)) {
+    if (!im.load()) {
       cerr << "Couldn't load " << InputImageName1 << endl;
       return 0;
     }
     KNGEMI002::Image inv = !im;
     inv.save(OutputImageName);
   }
-  else if (arg == "-l") {
+  else if (arg == "-l") { // mask
     if (argc != 5) {
       show_usage(argv[0]);
       return 1;
@@ -100,19 +100,34 @@ int main(int argc, char* argv[])
     InputImageName1 = argv[2];
     InputImageName2 = argv[3];
     OutputImageName = argv[4];
-    cout << InputImageName1 << endl;
-    cout << InputImageName2 << endl;
-    cout << OutputImageName << endl;
+    KNGEMI002::Image im1(InputImageName1);
+    if (!im1.load()) {
+      cerr << "Couldn't load " << InputImageName1 << endl;
+      return 0;
+    }
+    KNGEMI002::Image im2(InputImageName2);
+    if (!im2.load()) {
+      cerr << "Couldn't load " << InputImageName2 << endl;
+      return 0;
+    }
+    KNGEMI002::Image mask = im1 / im2;
+    mask.save(OutputImageName);
   }
   else if (arg == "-t") {
-    if (argc != 4) {
+    if (argc != 5) {
       show_usage(argv[0]);
       return 1;
     }
     InputImageName1 = argv[2];
-    OutputImageName = argv[3];
-    cout << InputImageName1 << endl;
-    cout << OutputImageName << endl;
+    int f = std::stoi(argv[3]);
+    OutputImageName = argv[4];
+    KNGEMI002::Image im(InputImageName1);
+    if (!im.load()) {
+      cerr << "Couldn't load " << InputImageName1 << endl;
+      return 0;
+    }
+    KNGEMI002::Image thres = im * f;
+    thres.save(OutputImageName);  
   }
   else {
     show_usage(argv[0]);

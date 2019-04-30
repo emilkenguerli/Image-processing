@@ -3,6 +3,7 @@
 #define IMAGE_H
 
 #include <iterator>
+#include <memory>
 
 using namespace std;
 
@@ -13,12 +14,16 @@ namespace KNGEMI002 {
     private:
       int width, height;
       unique_ptr<unsigned char[]> data;
-      string fileName;
+      string file_name;
+      struct Filter {
+        float x;
+        float y;
+      };
 
     public:
       void copy(const Image& rhs);
-      bool load(string fileName);
-      bool save(string fileName); // make private later
+      bool load();
+      bool save(string name); // make private later
       Image(); // default ctor
       Image(int w, int h, unsigned char* buffer); // ctor that takes in width, height and a buffer of values
       Image(string file_name); // constructor that takes in file name
@@ -30,7 +35,17 @@ namespace KNGEMI002 {
       Image operator+(const Image& rhs); // add images
       Image operator-(const Image& rhs); // substract images
       Image operator!(); // invert images
+      Image operator/(const Image& rhs); // mask image
+      Image operator*(int f); // threshold f
+      bool operator==(const Image& rhs); 
+      Image operator%(const Filter & g);
 
+      friend ostream& operator<<(ostream& lhs, const Image& rhs); // out stream 
+      friend ostream& operator>>(ifstream& lhs, Image& rhs); // out stream 
+
+      int get_width() { return width; }
+      int get_height() { return height; }
+      const unique_ptr<unsigned char[]>& get_data() { return data; }
 
       class iterator {
         private:
